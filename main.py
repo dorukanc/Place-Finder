@@ -1,29 +1,11 @@
 import requests
 from config import API_KEY  # Import API_KEY from config.py
 
-# List of companies to search
-companies = [
-    'Hilton headquarters',
-    'Marriott headquarters',
-    'Holiday Inn headquarters',
-    'Holiday Inn Express headquarters',
-    'Walt Disney Parks and Resorts headquarters',
-    'Hampton Inn headquarters',
-    'Courtyard by Marriott headquarters',
-    'Ritz-Carlton headquarters',
-    'Hyatt Regency headquarters',
-    'Best Western headquarters',
-    'Sheraton headquarters',
-    'Hyatt headquarters',
-    'Comfort Inn headquarters',
-    'Embassy Suites headquarters',
-    'Wyndham Hotels & Resorts headquarters',
-    'Hyatt Place headquarters',
-    'Doubletree headquarters',
-    'Hilton Garden Inn headquarters',
-    'Ramada headquarters',
-    'Days Inn headquarters'
-]
+def load_queries(file_path):
+    """Read queries from a text file.""" 
+    with open(file_path, 'r') as file:
+        queries = [line.strip() for line in file.readlines()]
+    return queries
 
 def search_place(query):
     """Searches for a place using the Google Places API."""
@@ -55,7 +37,10 @@ def get_place_details(place_id):
     return None
 
 def main():
-    for company in companies:
+    # Load queries from the queries.txt file
+    queries = load_queries('queries.txt')
+
+    for company in queries:
         print(f"Searching for: {company}")
         place = search_place(company)
         if place:
