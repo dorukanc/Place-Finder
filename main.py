@@ -10,8 +10,8 @@ def load_queries(file_path):
         queries = [line.strip() for line in file.readlines()]
     return queries
 
-def search_place(query):
-    """Searches for a place using the Google Places API."""
+def search_places(query, page_size=5):
+    """Searches for a list of places using the Google Places API."""
     url = API_URL
     headers = {
         'Content-Type': 'application/json',
@@ -19,14 +19,14 @@ def search_place(query):
         'X-Goog-FieldMask': 'places.displayName,places.formattedAddress,places.internationalPhoneNumber,places.websiteUri'
     }
     data = {
-        'textQuery': query
+        'textQuery': query,
+        'pageSize': page_size  # Limit the number of results to the first `page_size`
     }
     response = requests.post(url, json=data, headers=headers)
     if response.status_code == 200:
         result = response.json()
-        if result.get('places'):
-            return result['places'][0]  # Return the first match
-    return None
+        return result.get('places', [])  # Return the list of places
+    return []
 
 def save_to_csv(data, file_name='results.csv'):
     """Saves the data to a CSV file."""
@@ -42,18 +42,20 @@ def main():
 
     for query in queries:
         print(f"Searching for: {query}")
-        place = search_place(query)
-        if place:
-            place_info = {
-                'name': place['displayName']['text'],
-                'address': place['formattedAddress'],
-                'phone': place.get('internationalPhoneNumber', 'N/A'),
-                'website': place.get('websiteUri', 'N/A')
-            }
-            results.append(place_info)
-            print(f"Found: {place_info['name']} at {place_info['address']}")
-            print(f"Phone: {place_info['phone']}")
-            print(f"Website: {place_info['website']}")
+        places = search_places(query, page_size=5)  # Get the first 5 results
+        if places:
+            for place in places:
+                place_info = {
+                    'name': place['displayName']['text'],
+                    'address': place['formattedAddress'],
+                    'phone': place.get('internationalPhoneNumber', 'N/A'),
+                    'website': place.get('websiteUri', 'N/A')
+                }
+                results.append(place_info)
+                print(f"Found: {place_info['name']} at {place_info['address']}")
+                print(f"Phone: {place_info['phone']}")
+                print(f"Website: {place_info['website']}")
+                print("\n")
         else:
             print(f"No results found for {query}")
 
