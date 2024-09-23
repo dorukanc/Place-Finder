@@ -11,17 +11,36 @@ def load_queries(file_path):
     return queries
 
 def search_places(query, page_size=5):
-    """Searches for a list of places using the Google Places API."""
+    """Searches for a list of places using the Google Places API with a location restriction to the US."""
     url = API_URL
     headers = {
         'Content-Type': 'application/json',
         'X-Goog-Api-Key': API_KEY,
         'X-Goog-FieldMask': 'places.displayName,places.formattedAddress,places.internationalPhoneNumber,places.websiteUri'
     }
+    
+    # Define the rectangular viewport for the contiguous US (lower-left and upper-right coordinates)
+    location_restriction = {
+        "locationRestriction": {
+            "rectangle": {
+                "low": {
+                    "latitude": 24.396308,    # Southernmost point of the contiguous US
+                    "longitude": -125.0       # Westernmost point
+                },
+                "high": {
+                    "latitude": 49.384358,    # Northernmost point
+                    "longitude": -66.93457    # Easternmost point
+                }
+            }
+        }
+    }
+
     data = {
         'textQuery': query,
-        'pageSize': page_size  # Limit the number of results to the first `page_size`
+        'pageSize': page_size,  # Limit the number of results to the first `page_size`
+        **location_restriction   # Include the location restriction in the request
     }
+
     response = requests.post(url, json=data, headers=headers)
     if response.status_code == 200:
         result = response.json()
