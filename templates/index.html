@@ -3,67 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Headquarters Finder</title>
+    <title>Search Places</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
+            margin: 50px;
         }
-        .container {
-            width: 50%;
-            margin: 100px auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
+
         h1 {
-            text-align: center;
+            color: #333;
         }
-        .upload-section {
-            margin: 20px 0;
+
+        #form-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
         }
-        .upload-section input[type="file"] {
-            display: block;
-            margin: 20px auto;
-        }
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            color: #fff;
-            background-color: #007bff;
-            border: none;
-            border-radius: 5px;
-            text-align: center;
-            cursor: pointer;
+
+        select, input, button {
+            padding: 10px;
             font-size: 16px;
-            margin: 10px 0;
-            width: 100%;
+            width: 300px;
         }
-        .btn:hover {
-            background-color: #0056b3;
+
+        #results {
+            margin-top: 30px;
         }
     </style>
 </head>
 <body>
+    <h1>Search for Places and Get Headquarters Info</h1>
 
-    <div class="container">
-        <h1>Headquarters Finder</h1>
-        <form action="/upload" method="POST" enctype="multipart/form-data">
-            <div class="upload-section">
-                <label for="file">Upload Query File (.txt)</label>
-                <input type="file" name="file" id="file" accept=".txt" required>
-            </div>
-            <button type="submit" class="btn">Run</button>
+    <div id="form-container">
+        <form id="query-form">
+            <label for="query">Upload Query File:</label>
+            <input type="file" id="query" name="query">
+            
+            <label for="region">Select Region/Country:</label>
+            <select id="region" name="region">
+                <option value="US">🇺🇸 United States</option>
+                <option value="GB">🇬🇧 United Kingdom</option>
+                <option value="CA">🇨🇦 Canada</option>
+                <option value="AU">🇦🇺 Australia</option>
+                <option value="DE">🇩🇪 Germany</option>
+                <option value="FR">🇫🇷 France</option>
+                <option value="IT">🇮🇹 Italy</option>
+                <option value="JP">🇯🇵 Japan</option>
+                <option value="CN">🇨🇳 China</option>
+                <option value="IN">🇮🇳 India</option>
+                <option value="BR">🇧🇷 Brazil</option>
+                <option value="MX">🇲🇽 Mexico</option>
+                <option value="RU">🇷🇺 Russia</option>
+                <option value="ZA">🇿🇦 South Africa</option>
+                <option value="KR">🇰🇷 South Korea</option>
+                <option value="ES">🇪🇸 Spain</option>
+                <option value="SE">🇸🇪 Sweden</option>
+                <option value="CH">🇨🇭 Switzerland</option>
+                <option value="NL">🇳🇱 Netherlands</option>
+                <option value="BE">🇧🇪 Belgium</option>
+                <option value="DK">🇩🇰 Denmark</option>
+                <option value="NO">🇳🇴 Norway</option>
+                <option value="FI">🇫🇮 Finland</option>
+                <option value="PL">🇵🇱 Poland</option>
+                <option value="PT">🇵🇹 Portugal</option>
+                <option value="GR">🇬🇷 Greece</option>
+                <option value="AR">🇦🇷 Argentina</option>
+                <option value="CO">🇨🇴 Colombia</option>
+                <option value="CL">🇨🇱 Chile</option>
+                <option value="NG">🇳🇬 Nigeria</option>
+                <option value="KE">🇰🇪 Kenya</option>
+                <option value="SA">🇸🇦 Saudi Arabia</option>
+                <option value="TR">🇹🇷 Turkey</option>
+                <option value="EG">🇪🇬 Egypt</option>
+                <option value="TH">🇹🇭 Thailand</option>
+                <option value="SG">🇸🇬 Singapore</option>
+                <option value="MY">🇲🇾 Malaysia</option>
+                <option value="ID">🇮🇩 Indonesia</option>
+                <!-- Add more countries if needed -->
+            </select>
+
+            <button type="button" id="run-button">Run Search</button>
         </form>
 
-        <form action="/download" method="GET">
-            <button type="submit" class="btn">Download as CSV</button>
-        </form>
+        <!-- The download button will appear after the search -->
+        <button id="download-csv" style="display: none;">Download Results as CSV</button>
+
+        <!-- Result section -->
+        <div id="results"></div>
     </div>
 
+    <script>
+        document.getElementById('run-button').addEventListener('click', function () {
+            let formData = new FormData();
+            let queryFile = document.getElementById('query').files[0];
+            let region = document.getElementById('region').value;
+
+            formData.append('query', queryFile);
+            formData.append('region', region);
+
+            fetch('/run-search', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show the download CSV button when results are ready
+                    document.getElementById('download-csv').style.display = 'block';
+
+                    // Show results in a div (if you want to display in the UI)
+                    document.getElementById('results').innerHTML = '<h2>Results:</h2>' + JSON.stringify(data.results, null, 2);
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            });
+        });
+
+        // Add functionality to download CSV when the button is clicked
+        document.getElementById('download-csv').addEventListener('click', function () {
+            window.location.href = '/download-csv';
+        });
+    </script>
 </body>
 </html>
-
