@@ -3,127 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Places</title>
+    <title>Place Finder</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 50px;
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
-
-        h1 {
-            color: #333;
-        }
-
-        #form-container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 20px;
-        }
-
-        select, input, button {
-            padding: 10px;
-            font-size: 16px;
-            width: 300px;
-        }
-
-        #results {
-            margin-top: 30px;
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
     </style>
 </head>
-<body>
-    <h1>Search for Places and Get Headquarters Info</h1>
-
-    <div id="form-container">
-        <form id="query-form">
-            <label for="query">Upload Query File:</label>
-            <input type="file" id="query" name="query">
-            
-            <label for="region">Select Region/Country:</label>
-            <select id="region" name="region">
-                <option value="US">🇺🇸 United States</option>
-                <option value="GB">🇬🇧 United Kingdom</option>
-                <option value="CA">🇨🇦 Canada</option>
-                <option value="AU">🇦🇺 Australia</option>
-                <option value="DE">🇩🇪 Germany</option>
-                <option value="FR">🇫🇷 France</option>
-                <option value="IT">🇮🇹 Italy</option>
-                <option value="JP">🇯🇵 Japan</option>
-                <option value="CN">🇨🇳 China</option>
-                <option value="IN">🇮🇳 India</option>
-                <option value="BR">🇧🇷 Brazil</option>
-                <option value="MX">🇲🇽 Mexico</option>
-                <option value="RU">🇷🇺 Russia</option>
-                <option value="ZA">🇿🇦 South Africa</option>
-                <option value="KR">🇰🇷 South Korea</option>
-                <option value="ES">🇪🇸 Spain</option>
-                <option value="SE">🇸🇪 Sweden</option>
-                <option value="CH">🇨🇭 Switzerland</option>
-                <option value="NL">🇳🇱 Netherlands</option>
-                <option value="BE">🇧🇪 Belgium</option>
-                <option value="DK">🇩🇰 Denmark</option>
-                <option value="NO">🇳🇴 Norway</option>
-                <option value="FI">🇫🇮 Finland</option>
-                <option value="PL">🇵🇱 Poland</option>
-                <option value="PT">🇵🇹 Portugal</option>
-                <option value="GR">🇬🇷 Greece</option>
-                <option value="AR">🇦🇷 Argentina</option>
-                <option value="CO">🇨🇴 Colombia</option>
-                <option value="CL">🇨🇱 Chile</option>
-                <option value="NG">🇳🇬 Nigeria</option>
-                <option value="KE">🇰🇪 Kenya</option>
-                <option value="SA">🇸🇦 Saudi Arabia</option>
-                <option value="TR">🇹🇷 Turkey</option>
-                <option value="EG">🇪🇬 Egypt</option>
-                <option value="TH">🇹🇭 Thailand</option>
-                <option value="SG">🇸🇬 Singapore</option>
-                <option value="MY">🇲🇾 Malaysia</option>
-                <option value="ID">🇮🇩 Indonesia</option>
-                <!-- Add more countries if needed -->
-            </select>
-
-            <button type="button" id="run-button">Run Search</button>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center px-4">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h1 class="text-2xl font-bold mb-6 text-center">Place Finder</h1>
+        <form id="search-form" class="space-y-4">
+            <div>
+                <label for="query" class="block text-sm font-medium text-gray-700">Upload Query File:</label>
+                <input type="file" id="query" name="query" accept=".txt" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            <div>
+                <label for="location" class="block text-sm font-medium text-gray-700">Select Location:</label>
+                <select id="location" name="location" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <optgroup label="Countries">
+                        <option value="US">🇺🇸 United States</option>
+                        <option value="GB">🇬🇧 United Kingdom</option>
+                        <option value="CA">🇨🇦 Canada</option>
+                        <option value="AU">🇦🇺 Australia</option>
+                        <option value="DE">🇩🇪 Germany</option>
+                        <option value="FR">🇫🇷 France</option>
+                        <option value="JP">🇯🇵 Japan</option>
+                        <option value="BR">🇧🇷 Brazil</option>
+                        <option value="IN">🇮🇳 India</option>
+                        <option value="ZA">🇿🇦 South Africa</option>
+                        <option value="TR">🇹🇷 Turkey</option>
+                    </optgroup>
+                    <optgroup label="US States">
+                        <option value="US-AL">Alabama</option>
+                        <option value="US-AK">Alaska</option>
+                        <option value="US-AZ">Arizona</option>
+                        <option value="US-AR">Arkansas</option>
+                        <option value="US-CA">California</option>
+                        <option value="US-CO">Colorado</option>
+                        <option value="US-CT">Connecticut</option>
+                        <option value="US-DE">Delaware</option>
+                        <option value="US-FL">Florida</option>
+                        <option value="US-GA">Georgia</option>
+                        <option value="US-HI">Hawaii</option>
+                        <option value="US-ID">Idaho</option>
+                        <option value="US-IL">Illinois</option>
+                        <option value="US-IN">Indiana</option>
+                        <option value="US-IA">Iowa</option>
+                        <option value="US-KS">Kansas</option>
+                        <option value="US-KY">Kentucky</option>
+                        <option value="US-LA">Louisiana</option>
+                        <option value="US-ME">Maine</option>
+                        <option value="US-MD">Maryland</option>
+                        <option value="US-MA">Massachusetts</option>
+                        <option value="US-MI">Michigan</option>
+                        <option value="US-MN">Minnesota</option>
+                        <option value="US-MS">Mississippi</option>
+                        <option value="US-MO">Missouri</option>
+                        <option value="US-MT">Montana</option>
+                        <option value="US-NE">Nebraska</option>
+                        <option value="US-NV">Nevada</option>
+                        <option value="US-NH">New Hampshire</option>
+                        <option value="US-NJ">New Jersey</option>
+                        <option value="US-NM">New Mexico</option>
+                        <option value="US-NY">New York</option>
+                        <option value="US-NC">North Carolina</option>
+                        <option value="US-ND">North Dakota</option>
+                        <option value="US-OH">Ohio</option>
+                        <option value="US-OK">Oklahoma</option>
+                        <option value="US-OR">Oregon</option>
+                        <option value="US-PA">Pennsylvania</option>
+                        <option value="US-RI">Rhode Island</option>
+                        <option value="US-SC">South Carolina</option>
+                        <option value="US-SD">South Dakota</option>
+                        <option value="US-TN">Tennessee</option>
+                        <option value="US-TX">Texas</option>
+                        <option value="US-UT">Utah</option>
+                        <option value="US-VT">Vermont</option>
+                        <option value="US-VA">Virginia</option>
+                        <option value="US-WA">Washington</option>
+                        <option value="US-WV">West Virginia</option>
+                        <option value="US-WI">Wisconsin</option>
+                        <option value="US-WY">Wyoming</option>
+                    </optgroup>
+                </select>
+            </div>
+            <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Run Search
+            </button>
         </form>
-
-        <!-- The download button will appear after the search -->
-        <button id="download-csv" style="display: none;">Download Results as CSV</button>
-
-        <!-- Result section -->
-        <div id="results"></div>
+        <div id="status" class="mt-4 text-center hidden">
+            <p class="text-indigo-600 font-semibold animate-pulse">Processing... Please wait</p>
+        </div>
+        <div id="download-container" class="mt-4 text-center hidden">
+            <a href="/download-csv" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                Download Results
+            </a>
+        </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
     <script>
-        document.getElementById('run-button').addEventListener('click', function () {
-            let formData = new FormData();
-            let queryFile = document.getElementById('query').files[0];
-            let region = document.getElementById('region').value;
-
-            formData.append('query', queryFile);
-            formData.append('region', region);
-
-            fetch('/run-search', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Show the download CSV button when results are ready
-                    document.getElementById('download-csv').style.display = 'block';
-
-                    // Show results in a div (if you want to display in the UI)
-                    document.getElementById('results').innerHTML = '<h2>Results:</h2>' + JSON.stringify(data.results, null, 2);
-                } else {
-                    alert('Error: ' + data.message);
+        let currentSessionId = null;
+    
+        const form = document.getElementById('search-form');
+        const statusDiv = document.getElementById('status');
+        const downloadContainer = document.getElementById('download-container');
+    
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            statusDiv.classList.remove('hidden');
+            downloadContainer.classList.add('hidden');
+    
+            const formData = new FormData(form);
+            try {
+                const response = await axios.post('/run-search', formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+                if (response.data.success) {
+                    currentSessionId = response.data.session_id;
+                    checkStatus();
                 }
-            });
+            } catch (error) {
+                console.error('Error:', error);
+                statusDiv.innerHTML = '<p class="text-red-600">An error occurred. Please try again.</p>';
+            }
         });
-
-        // Add functionality to download CSV when the button is clicked
-        document.getElementById('download-csv').addEventListener('click', function () {
-            window.location.href = '/download-csv';
-        });
+    
+        function checkStatus() {
+            axios.get(`/check-status/${currentSessionId}`)
+                .then(response => {
+                    if (response.data.status === 'complete') {
+                        statusDiv.classList.add('hidden');
+                        downloadContainer.classList.remove('hidden');
+                        // Update download link
+                        document.querySelector('#download-container a').href = `/download-csv/${currentSessionId}`;
+                    } else {
+                        setTimeout(checkStatus, 2000);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking status:', error);
+                });
+        }
     </script>
 </body>
 </html>
