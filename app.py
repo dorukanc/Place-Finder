@@ -16,7 +16,7 @@ API_URL = 'https://places.googleapis.com/v1/places:searchText'
 # Create a temporary directory to store files
 TEMP_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'temp')
 QUERY_DIR = os.path.join(TEMP_DIR, 'queries')
-RESULTS_DIR = os.path.join(TEMP_DIR, 'results')  # Fixed typo: 'reults' to 'results'
+RESULTS_DIR = os.path.join(TEMP_DIR, 'results')  
 
 # Ensure directories exist
 os.makedirs(QUERY_DIR, exist_ok=True)

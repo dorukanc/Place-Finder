@@ -89,7 +89,7 @@ Website: https://www.hilton.com
 ```
 hq-finder/
 │
-├── main.py               # Main Python script that retrieves headquarters info
+├── app.py               # Main Python script that retrieves data
 ├── config.py             # (Optional) File to store the API key (git-ignored)
 ├── requirements.txt      # Required Python packages
 ├── .gitignore            # To ignore sensitive files
