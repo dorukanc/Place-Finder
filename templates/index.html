@@ -93,8 +93,21 @@
                     </optgroup>
                 </select>
             </div>
-            <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                Run Search
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Search Type:</label>
+                <div class="mt-2">
+                    <label class="inline-flex items-center">
+                        <input type="radio" class="form-radio" name="search-type" value="headquarters" checked>
+                        <span class="ml-2">List Locations</span>
+                    </label>
+                    <label class="inline-flex items-center ml-6">
+                        <input type="radio" class="form-radio" name="search-type" value="state-count">
+                        <span class="ml-2">Count Locations by State</span>
+                    </label>
+                </div>
+            </div>
+            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Search
             </button>
         </form>
         <div id="status" class="mt-4 text-center hidden">

@@ -1,41 +1,18 @@
-Hilton headquarters
-Hilton Worldwide headquarters
-Marriott headquarters
-Marriott International headquarters
-Holiday Inn headquarters
-IHG Holiday Inn headquarters
-Holiday Inn Express headquarters
-IHG Holiday Inn Express headquarters
-Walt Disney Parks and Resorts headquarters
-Disney World corporate office
-Hampton Inn headquarters
-Hilton Hampton Inn headquarters
-Courtyard by Marriott headquarters
-Marriott Courtyard headquarters
-Ritz-Carlton headquarters
-The Ritz-Carlton Hotel Company headquarters
-Hyatt Regency headquarters
-Hyatt Hotels Corporation headquarters
-Best Western headquarters
-Best Western International headquarters
-Sheraton headquarters
-Marriott Sheraton headquarters
-Hyatt headquarters
-Hyatt Hotels Corporation headquarters
-Comfort Inn headquarters
-Choice Hotels Comfort Inn headquarters
-Embassy Suites headquarters
-Hilton Embassy Suites headquarters
-Wyndham Hotels & Resorts headquarters
-Wyndham Worldwide headquarters
-Hyatt Place headquarters
-Hyatt Hotels Hyatt Place headquarters
-Doubletree headquarters
-Hilton Doubletree headquarters
-Hilton Garden Inn headquarters
-Hilton Garden Inn corporate office
-Ramada headquarters
-Wyndham Ramada headquarters
-Days Inn headquarters
-Wyndham Days Inn headquarters
-
+Hilton Hotels
+Marriott Hotels
+Holiday Inn
+Walt Disney Parks and Resorts
+Hampton Inn
+Courtyard by Marriott
+Ritz-Carlton
+Hyatt Hotels
+Best Western
+Sheraton Hotels
+Comfort Inn
+Embassy Suites
+Wyndham Hotels
+Hyatt Place
+DoubleTree by Hilton
+Hilton Garden Inn
+Ramada
+Days Inn
