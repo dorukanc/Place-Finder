@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,110 +15,122 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center px-4">
-    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 class="text-2xl font-bold mb-6 text-center">Place Finder</h1>
-        <form id="search-form" class="space-y-4">
-            <div>
-                <label for="query" class="block text-sm font-medium text-gray-700">Upload Query File:</label>
-                <input type="file" id="query" name="query" accept=".txt" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-            </div>
-            <div>
-                <label for="location" class="block text-sm font-medium text-gray-700">Select Location:</label>
-                <select id="location" name="location" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                    <optgroup label="Countries">
-                        <option value="US">🇺🇸 United States</option>
-                        <option value="GB">🇬🇧 United Kingdom</option>
-                        <option value="CA">🇨🇦 Canada</option>
-                        <option value="AU">🇦🇺 Australia</option>
-                        <option value="DE">🇩🇪 Germany</option>
-                        <option value="FR">🇫🇷 France</option>
-                        <option value="JP">🇯🇵 Japan</option>
-                        <option value="BR">🇧🇷 Brazil</option>
-                        <option value="IN">🇮🇳 India</option>
-                        <option value="ZA">🇿🇦 South Africa</option>
-                        <option value="TR">🇹🇷 Turkey</option>
-                    </optgroup>
-                    <optgroup label="US States">
-                        <option value="US-AL">Alabama</option>
-                        <option value="US-AK">Alaska</option>
-                        <option value="US-AZ">Arizona</option>
-                        <option value="US-AR">Arkansas</option>
-                        <option value="US-CA">California</option>
-                        <option value="US-CO">Colorado</option>
-                        <option value="US-CT">Connecticut</option>
-                        <option value="US-DE">Delaware</option>
-                        <option value="US-FL">Florida</option>
-                        <option value="US-GA">Georgia</option>
-                        <option value="US-HI">Hawaii</option>
-                        <option value="US-ID">Idaho</option>
-                        <option value="US-IL">Illinois</option>
-                        <option value="US-IN">Indiana</option>
-                        <option value="US-IA">Iowa</option>
-                        <option value="US-KS">Kansas</option>
-                        <option value="US-KY">Kentucky</option>
-                        <option value="US-LA">Louisiana</option>
-                        <option value="US-ME">Maine</option>
-                        <option value="US-MD">Maryland</option>
-                        <option value="US-MA">Massachusetts</option>
-                        <option value="US-MI">Michigan</option>
-                        <option value="US-MN">Minnesota</option>
-                        <option value="US-MS">Mississippi</option>
-                        <option value="US-MO">Missouri</option>
-                        <option value="US-MT">Montana</option>
-                        <option value="US-NE">Nebraska</option>
-                        <option value="US-NV">Nevada</option>
-                        <option value="US-NH">New Hampshire</option>
-                        <option value="US-NJ">New Jersey</option>
-                        <option value="US-NM">New Mexico</option>
-                        <option value="US-NY">New York</option>
-                        <option value="US-NC">North Carolina</option>
-                        <option value="US-ND">North Dakota</option>
-                        <option value="US-OH">Ohio</option>
-                        <option value="US-OK">Oklahoma</option>
-                        <option value="US-OR">Oregon</option>
-                        <option value="US-PA">Pennsylvania</option>
-                        <option value="US-RI">Rhode Island</option>
-                        <option value="US-SC">South Carolina</option>
-                        <option value="US-SD">South Dakota</option>
-                        <option value="US-TN">Tennessee</option>
-                        <option value="US-TX">Texas</option>
-                        <option value="US-UT">Utah</option>
-                        <option value="US-VT">Vermont</option>
-                        <option value="US-VA">Virginia</option>
-                        <option value="US-WA">Washington</option>
-                        <option value="US-WV">West Virginia</option>
-                        <option value="US-WI">Wisconsin</option>
-                        <option value="US-WY">Wyoming</option>
-                    </optgroup>
-                </select>
-            </div>
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700">Search Type:</label>
-                <div class="mt-2">
-                    <label class="inline-flex items-center">
-                        <input type="radio" class="form-radio" name="search-type" value="headquarters" checked>
-                        <span class="ml-2">List Locations</span>
-                    </label>
-                    <label class="inline-flex items-center ml-6">
-                        <input type="radio" class="form-radio" name="search-type" value="state-count">
-                        <span class="ml-2">Count Locations by State</span>
-                    </label>
+<body class="h-full flex flex-col bg-gray-100">
+    <main class="flex-grow flex items-center justify-center px-4 py-12">
+        <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+            <h1 class="text-2xl font-bold mb-6 text-center">Place Finder</h1>
+            <form id="search-form" class="space-y-4">
+                <div>
+                    <label for="query" class="block text-sm font-medium text-gray-700">Upload Query File:</label>
+                    <input type="file" id="query" name="query" accept=".txt" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 </div>
+                <div>
+                    <label for="location" class="block text-sm font-medium text-gray-700">Select Location:</label>
+                    <select id="location" name="location" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <optgroup label="Countries">
+                            <option value="US">🇺🇸 United States</option>
+                            <option value="GB">🇬🇧 United Kingdom</option>
+                            <option value="CA">🇨🇦 Canada</option>
+                            <option value="AU">🇦🇺 Australia</option>
+                            <option value="DE">🇩🇪 Germany</option>
+                            <option value="FR">🇫🇷 France</option>
+                            <option value="JP">🇯🇵 Japan</option>
+                            <option value="BR">🇧🇷 Brazil</option>
+                            <option value="IN">🇮🇳 India</option>
+                            <option value="ZA">🇿🇦 South Africa</option>
+                            <option value="TR">🇹🇷 Turkey</option>
+                        </optgroup>
+                        <optgroup label="US States">
+                            <option value="US-AL">Alabama</option>
+                            <option value="US-AK">Alaska</option>
+                            <option value="US-AZ">Arizona</option>
+                            <option value="US-AR">Arkansas</option>
+                            <option value="US-CA">California</option>
+                            <option value="US-CO">Colorado</option>
+                            <option value="US-CT">Connecticut</option>
+                            <option value="US-DE">Delaware</option>
+                            <option value="US-FL">Florida</option>
+                            <option value="US-GA">Georgia</option>
+                            <option value="US-HI">Hawaii</option>
+                            <option value="US-ID">Idaho</option>
+                            <option value="US-IL">Illinois</option>
+                            <option value="US-IN">Indiana</option>
+                            <option value="US-IA">Iowa</option>
+                            <option value="US-KS">Kansas</option>
+                            <option value="US-KY">Kentucky</option>
+                            <option value="US-LA">Louisiana</option>
+                            <option value="US-ME">Maine</option>
+                            <option value="US-MD">Maryland</option>
+                            <option value="US-MA">Massachusetts</option>
+                            <option value="US-MI">Michigan</option>
+                            <option value="US-MN">Minnesota</option>
+                            <option value="US-MS">Mississippi</option>
+                            <option value="US-MO">Missouri</option>
+                            <option value="US-MT">Montana</option>
+                            <option value="US-NE">Nebraska</option>
+                            <option value="US-NV">Nevada</option>
+                            <option value="US-NH">New Hampshire</option>
+                            <option value="US-NJ">New Jersey</option>
+                            <option value="US-NM">New Mexico</option>
+                            <option value="US-NY">New York</option>
+                            <option value="US-NC">North Carolina</option>
+                            <option value="US-ND">North Dakota</option>
+                            <option value="US-OH">Ohio</option>
+                            <option value="US-OK">Oklahoma</option>
+                            <option value="US-OR">Oregon</option>
+                            <option value="US-PA">Pennsylvania</option>
+                            <option value="US-RI">Rhode Island</option>
+                            <option value="US-SC">South Carolina</option>
+                            <option value="US-SD">South Dakota</option>
+                            <option value="US-TN">Tennessee</option>
+                            <option value="US-TX">Texas</option>
+                            <option value="US-UT">Utah</option>
+                            <option value="US-VT">Vermont</option>
+                            <option value="US-VA">Virginia</option>
+                            <option value="US-WA">Washington</option>
+                            <option value="US-WV">West Virginia</option>
+                            <option value="US-WI">Wisconsin</option>
+                            <option value="US-WY">Wyoming</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700">Search Type:</label>
+                    <div class="mt-2">
+                        <label class="inline-flex items-center">
+                            <input type="radio" class="form-radio" name="search-type" value="specific-location" checked>
+                            <span class="ml-2">List Locations</span>
+                        </label>
+                        <label class="inline-flex items-center ml-6">
+                            <input type="radio" class="form-radio" name="search-type" value="state-count">
+                            <span class="ml-2">Count Locations by State</span>
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Search
+                </button>
+            </form>
+            <div id="status" class="mt-4 text-center hidden">
+                <p class="text-indigo-600 font-semibold animate-pulse">Processing... Please wait</p>
             </div>
-            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                Search
-            </button>
-        </form>
-        <div id="status" class="mt-4 text-center hidden">
-            <p class="text-indigo-600 font-semibold animate-pulse">Processing... Please wait</p>
+            <div id="download-container" class="mt-4 text-center hidden">
+                <a href="/download-csv" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                    Download Results
+                </a>
+            </div>
         </div>
-        <div id="download-container" class="mt-4 text-center hidden">
-            <a href="/download-csv" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                Download Results
-            </a>
-        </div>
-    </div>
+    </main>
+
+
+    <footer class="bg-gray-800 text-white py-4 text-center">
+        <p class="flex items-center justify-center">
+            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+            </svg>
+            Created by <a href="https://github.com/dorukanc" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 ml-1">Dorukan</a>
+        </p>
+    </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
     <script>
