@@ -1,22 +1,24 @@
-# HQ Finder
+# Place Finder
 
 ## Overview
 
-**HQ Finder** is a Python-based tool that uses the Google Places API to retrieve the headquarters address, contact information, and other details for well-known hotel chains. This script automates the process of finding business information and outputs the results in a structured format.
+**Place Finder** is a Python-based web application that utilizes the Google Places API to search for and retrieve information about various locations. It allows users to perform text-based searches across different countries and US states, making it an excellent tool for market research and data collection directly from Google Maps.
 
 ## Features
 
-- **Retrieve Headquarters Information**: Fetch the headquarters' address, phone number, and website for a list of companies.
-- **Google Places API**: Leverages the Google Places API for reliable business information.
-- **Secure API Keys**: Keeps your API key secure by using environment variables or config files excluded from version control.
-- **CSV Output**: Optionally export the retrieved results to a CSV file.
+- **Flexible Text Search**: Search for any query across multiple locations.
+- **Country and US State Support**: Perform searches in various countries and specific US states.
+- **CSV Export**: Export search results to a CSV file for easy analysis.
+- **US State Count**: Ability to count search results for each US state, useful for comparative analysis.
+- **User-friendly Interface**: Simple web interface for easy interaction with the tool.
+- **Google Places API Integration**: Leverages the Google Places API for accurate and up-to-date information.
 
 ## Installation
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/hq-finder.git
-   cd hq-finder
+   git clone https://github.com/dorukanc/place-finder.git
+   cd place-finder
    ```
 
 2. Set up a virtual environment (optional but recommended):
@@ -31,74 +33,77 @@
    ```
 
 4. Set up your Google Places API key:
-   - Add your API key to an environment variable or create a `config.py` file.
-
-## Usage
-
-### Using Environment Variables
-
-1. Add your Google Places API key to your shell's environment variables:
-
-   **Linux/macOS:**
-   ```bash
-   export API_KEY="YOUR_API_KEY"
-   ```
-
-   **Windows (CMD):**
-   ```cmd
-   set API_KEY=YOUR_API_KEY
-   ```
-
-2. Run the script:
-   ```bash
-   python main.py
-   ```
-
-### Using a Config File
-
-1. Create a `config.py` file:
-   ```python
-   # config.py
-   API_KEY = "YOUR_API_KEY"
-   ```
-
-2. Make sure `config.py` is added to your `.gitignore` file.
-
-3. Run the script:
-   ```bash
-   python main.py
-   ```
-
-## Example Output
-
-```
-Company: Hilton
-Address: 7930 Jones Branch Dr, McLean, VA 22102, USA
-Phone: +1 703-883-1000
-Website: https://www.hilton.com
-```
+   - Create a `config.py` file in the root directory.
+   - Add your API key to the `config.py` file:
+     ```python
+     API_KEY = "YOUR_GOOGLE_PLACES_API_KEY"
+     ```
 
 ## Configuration
 
-- **API Key Security**: Store your API key securely using environment variables or a config file.
-- **Custom Queries**: Modify the list of companies to include other businesses.
-- **CSV Export**: You can enable CSV export in the script to save results.
+1. Obtain a Google Places API key:
+   - Go to the [Google Cloud Console](https://console.cloud.google.com/).
+   - Create a new project or select an existing one.
+   - Enable the Places API for your project.
+   - Create credentials (API key) for the Places API.
+
+2. Configure the application:
+   - Open `config.py` and replace `"YOUR_GOOGLE_PLACES_API_KEY"` with your actual API key.
+
+## Usage
+
+1. Start the application:
+   ```bash
+   python app.py
+   ```
+
+2. Open a web browser and navigate to `http://localhost:5000`.
+
+3. Using the web interface:
+   - Upload a text file containing your search queries (one per line).
+   - Select the location (country or US state) for your search from the dropdown menu.
+   - Click "Run Search" to start the process.
+   - Wait for the search to complete.
+   - Once complete, click "Download Results" to get your CSV file.
+
+### Example Use Cases
+
+1. Find hotel locations:
+   - Upload a file with hotel chain names.
+   - Select different states to compare hotel presence across the US.
+
+2. Market research for a retail chain:
+   - Search for your company name across different countries to see international presence.
+
+3. Competitor analysis:
+   - Search for competitor names in specific regions to understand their market coverage.
+
+## US State Count Feature
+
+To use the US State Count feature:
+
+1. Prepare a text file with your search queries.
+2. Run the search for each US state you're interested in.
+3. The resulting CSV will include a count of results for each state, allowing you to compare presence across states easily.
 
 ## Project Structure
 
 ```
-hq-finder/
+place-finder/
 │
-├── main.py               # Main Python script that retrieves headquarters info
-├── config.py             # (Optional) File to store the API key (git-ignored)
-├── requirements.txt      # Required Python packages
-├── .gitignore            # To ignore sensitive files
-└── README.md             # This file
+├── app.py               # Main Flask application
+├── config.py            # Configuration file for API key
+├── location_bounds.json # JSON file containing location boundaries
+├── requirements.txt     # Required Python packages
+├── templates/
+│   └── index.html       # HTML template for the web interface
+└── README.md            # This file
 ```
 
 ## License
 
 This project is licensed under the MIT License.
-```
 
-This version of the repository name is more concise while still capturing the core function of the tool. Let me know if you need further changes!
+## Note
+
+Ensure that you comply with Google's Terms of Service and usage limits when using this tool. The application is designed for educational and research purposes, and users should be aware of and adhere to Google's policies regarding data usage and collection.
