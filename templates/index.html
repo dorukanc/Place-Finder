@@ -106,6 +106,14 @@
                             <span class="ml-2">Count Locations by State</span>
                         </label>
                     </div>
+                    
+                    <div id="deep-search-container" class="mb-4 hidden">
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" class="form-checkbox" name="use-deep-search" value="true">
+                            <span class="ml-2">Use Deep Search (may take longer)</span>
+                        </label>
+                    </div>
+    
                 </div>
                 <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                     Search
@@ -134,48 +142,71 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
     <script>
-        let currentSessionId = null;
-    
-        const form = document.getElementById('search-form');
-        const statusDiv = document.getElementById('status');
-        const downloadContainer = document.getElementById('download-container');
-    
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            statusDiv.classList.remove('hidden');
-            downloadContainer.classList.add('hidden');
-    
-            const formData = new FormData(form);
-            try {
-                const response = await axios.post('/run-search', formData, {
-                    headers: { 'Content-Type': 'multipart/form-data' }
-                });
-                if (response.data.success) {
-                    currentSessionId = response.data.session_id;
-                    checkStatus();
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                statusDiv.innerHTML = '<p class="text-red-600">An error occurred. Please try again.</p>';
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('search-form');
+            const status = document.getElementById('status');
+            const downloadContainer = document.getElementById('download-container');
+            const downloadLink = document.getElementById('download-link');
+            const deepSearchContainer = document.getElementById('deep-search-container');
+            const searchTypeRadios = document.querySelectorAll('input[name="search-type"]');
+
+            // Function to toggle deep search visibility
+            function toggleDeepSearch() {
+                const selectedSearchType = document.querySelector('input[name="search-type"]:checked').value;
+                deepSearchContainer.classList.toggle('hidden', selectedSearchType !== 'state-count');
             }
-        });
-    
-        function checkStatus() {
-            axios.get(`/check-status/${currentSessionId}`)
-                .then(response => {
-                    if (response.data.status === 'complete') {
-                        statusDiv.classList.add('hidden');
-                        downloadContainer.classList.remove('hidden');
-                        // Update download link
-                        document.querySelector('#download-container a').href = `/download-csv/${currentSessionId}`;
+
+            // Add event listeners to search type radio buttons
+            searchTypeRadios.forEach(radio => {
+                radio.addEventListener('change', toggleDeepSearch);
+            });
+
+            // Initial toggle on page load
+            toggleDeepSearch();
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                status.classList.remove('hidden');
+                downloadContainer.classList.add('hidden');
+
+                let formData = new FormData(form);
+
+                fetch('/run-search', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        checkStatus(data.session_id);
                     } else {
-                        setTimeout(checkStatus, 2000);
+                        status.textContent = 'Error: ' + data.message;
                     }
                 })
                 .catch(error => {
-                    console.error('Error checking status:', error);
+                    console.error('Error:', error);
+                    status.textContent = 'An error occurred. Please try again.';
                 });
-        }
+            });
+
+            function checkStatus(sessionId) {
+                fetch(`/check-status/${sessionId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'complete') {
+                        status.classList.add('hidden');
+                        downloadContainer.classList.remove('hidden');
+                        downloadLink.href = `/download-csv/${sessionId}`;
+                    } else {
+                        setTimeout(() => checkStatus(sessionId), 5000);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    status.textContent = 'An error occurred while checking status.';
+                });
+            }
+        });
     </script>
 </body>
 </html>
