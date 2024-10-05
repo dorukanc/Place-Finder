@@ -66,17 +66,17 @@ def divide_bounding_box(bounds, divisions):
 
 def deep_search_places(query, location_code, divisions=10):
     """
-    Perform a deep search by dividing the area into smaller parts.
+    Perform a deep search by dividing the area into smaller parts, only counting results.
     """
     bounds = get_location_bounds(location_code)
     if not bounds:
-        return []
+        return 0
 
     sub_boxes = divide_bounding_box(bounds, divisions)
-    all_places = []
+    total_count = 0
 
     for sub_box in sub_boxes:
-        places = search_places(query, None, location_restriction={
+        count = count_places(query, None, location_restriction={
                 'rectangle': {
                 'low': {
                     'latitude': sub_box['southwest']['lat'],
@@ -88,19 +88,19 @@ def deep_search_places(query, location_code, divisions=10):
                 }
             }
         })
-        all_places.extend(places)
+        total_count += count
 
-    return all_places
+    return total_count
 
 # Added deep search function, counting locations per state
 def count_locations_per_state(query, use_deep_search=False):
     state_counts = {state: 0 for state in LOCATION_BOUNDS.keys() if state.startswith('US-')}
     for state in state_counts.keys():
         if use_deep_search:
-            places = deep_search_places(query, state)
+            count = deep_search_places(query, state)
         else:
-            places = search_places(query, state)
-        state_counts[state] = len(places)
+            count = count_places(query, state)
+        state_counts[state] = count
     return state_counts
 
 def process_state_count_queries(query_file_path, results_file_path, use_deep_search=False):
@@ -121,7 +121,7 @@ def process_state_count_queries(query_file_path, results_file_path, use_deep_sea
         print(f"Error processing state count queries: {e}")
     finally:
         if os.path.exists(query_file_path):
-            os.remove(query_file_path)
+            os.remove(query_file_path) 
             print(f"Deleted query file: {query_file_path}")
 
         threading.Thread(target=delete_file_after_delay, args=(results_file_path,)).start()
@@ -185,6 +185,57 @@ def search_places(query, location_code, page_size=20, location_restriction=None)
             break
     
     return all_places
+
+# Added another api req methdo to reduce cost only getting places.id -> for deep search state_count func
+
+def count_places(query, location_code, location_restriction=None):
+    headers = {
+        'Content-Type': 'application/json',
+        'X-Goog-Api-Key': API_KEY,
+        'X-Goog-FieldMask': 'places.id,nextPageToken'  # We only need the place ID to count and the next page token
+    }
+    
+    if location_code and not location_restriction:
+        bounds = get_location_bounds(location_code)
+        if bounds:
+            location_restriction = {
+                'rectangle': {
+                    'low': {
+                        'latitude': bounds['southwest']['lat'],
+                        'longitude': bounds['southwest']['lng']
+                    },
+                    'high': {
+                        'latitude': bounds['northeast']['lat'],
+                        'longitude': bounds['northeast']['lng']
+                    }
+                }
+            }
+    
+    total_count = 0
+    page_token = None
+    
+    while True:
+        data = {
+            'textQuery': query,
+            'maxResultCount': 20,  # Maximum allowed by the API
+            'locationRestriction': location_restriction
+        }
+        if page_token:
+            data['pageToken'] = page_token
+        
+        try:
+            response = requests.post(API_URL, json=data, headers=headers)
+            response.raise_for_status()
+            result = response.json()
+            total_count += len(result.get('places', []))
+            page_token = result.get('nextPageToken')
+            if not page_token:
+                break
+        except requests.RequestException as e:
+            print(f"API request failed: {e}")
+            break
+    
+    return total_count
 
 def save_to_csv(data, file_path):
     """Saves the data to a CSV file."""
