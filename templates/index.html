@@ -143,42 +143,37 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            let currentSessionId = null;
             const form = document.getElementById('search-form');
             const status = document.getElementById('status');
             const downloadContainer = document.getElementById('download-container');
-            const downloadLink = document.getElementById('download-link');
             const deepSearchContainer = document.getElementById('deep-search-container');
-            const searchTypeRadios = document.querySelectorAll('input[name="search-type"]');
 
-            // Function to toggle deep search visibility
+            // Toggle deep search visibility based on search type
             function toggleDeepSearch() {
-                const selectedSearchType = document.querySelector('input[name="search-type"]:checked').value;
-                deepSearchContainer.classList.toggle('hidden', selectedSearchType !== 'state-count');
+                const isStateCount = document.querySelector('input[name="search-type"]:checked').value === 'state-count';
+                deepSearchContainer.classList.toggle('hidden', !isStateCount);
             }
 
-            // Add event listeners to search type radio buttons
-            searchTypeRadios.forEach(radio => {
-                radio.addEventListener('change', toggleDeepSearch);
-            });
-
-            // Initial toggle on page load
+            // Set up event listeners
+            document.querySelectorAll('input[name="search-type"]').forEach(radio => radio.addEventListener('change', toggleDeepSearch));
+            form.addEventListener('submit', handleSubmit);
             toggleDeepSearch();
 
-            form.addEventListener('submit', function(e) {
+            function handleSubmit(e) {
                 e.preventDefault();
                 status.classList.remove('hidden');
                 downloadContainer.classList.add('hidden');
 
-                let formData = new FormData(form);
-
                 fetch('/run-search', {
                     method: 'POST',
-                    body: formData
+                    body: new FormData(form)
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        checkStatus(data.session_id);
+                        currentSessionId = data.session_id;
+                        checkStatus();
                     } else {
                         status.textContent = 'Error: ' + data.message;
                     }
@@ -187,18 +182,18 @@
                     console.error('Error:', error);
                     status.textContent = 'An error occurred. Please try again.';
                 });
-            });
+            }
 
-            function checkStatus(sessionId) {
-                fetch(`/check-status/${sessionId}`)
+            function checkStatus() {
+                fetch(`/check-status/${currentSessionId}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'complete') {
                         status.classList.add('hidden');
                         downloadContainer.classList.remove('hidden');
-                        downloadLink.href = `/download-csv/${sessionId}`;
+                        document.querySelector('#download-container a').href = `/download-csv/${currentSessionId}`;
                     } else {
-                        setTimeout(() => checkStatus(sessionId), 5000);
+                        setTimeout(checkStatus, 5000);
                     }
                 })
                 .catch(error => {

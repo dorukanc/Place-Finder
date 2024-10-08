@@ -23,8 +23,8 @@ RESULTS_DIR = os.path.join(TEMP_DIR, 'results')
 os.makedirs(QUERY_DIR, exist_ok=True)
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
-# File expiration time in seconds (15 minutes)
-FILE_EXPIRATION_TIME = 15 * 60
+# File expiration time in seconds (300 minutes)
+FILE_EXPIRATION_TIME = 300 * 60
 
 # Load country and state bounds from a JSON file
 with open('location_bounds.json', 'r') as f:
@@ -64,7 +64,7 @@ def divide_bounding_box(bounds, divisions):
     
     return sub_boxes
 
-def deep_search_places(query, location_code, divisions=10):
+def deep_search_places(query, location_code, divisions=3):
     """
     Perform a deep search by dividing the area into smaller parts, only counting results.
     """
@@ -286,7 +286,7 @@ def run_search():
 
     return jsonify({'success': True, 'message': 'Search started', 'session_id': session_id})
 
-def process_specific_location_queries(query_file_path, location_code, results_file_path):
+def process_specific_location_queries(query_file_path, location_code, results_file_path, use_deep_search=False):
     try:
         with open(query_file_path, 'r', encoding='utf-8') as file:
             queries = file.readlines()
