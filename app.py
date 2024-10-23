@@ -4,15 +4,17 @@ import csv
 import os
 import tempfile
 import uuid
-from config import API_KEY
+from dotenv import load_dotenv
 import threading
 import time
 import json
 import math
 
+
 app = Flask(__name__)
 
 API_URL = 'https://places.googleapis.com/v1/places:searchText'
+API_KEY = os.getenv('API_KEY')
 
 # Create a temporary directory to store files
 TEMP_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'temp')
