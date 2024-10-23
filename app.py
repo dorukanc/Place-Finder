@@ -139,7 +139,7 @@ def save_state_count_to_csv(data, file_path):
             writer.writerow([row['place_name']] + [row['state_counts'].get(state, 0) for state in header[1:]])
 
 
-def search_places(query, location_code, page_size=20, location_restriction=None):
+def search_places(query, location_code, categories, page_size=20, location_restriction=None):
     headers = {
         'Content-Type': 'application/json',
         'X-Goog-Api-Key': API_KEY,
@@ -169,7 +169,8 @@ def search_places(query, location_code, page_size=20, location_restriction=None)
         data = {
             'textQuery': query,
             'maxResultCount': page_size,
-            'locationRestriction': location_restriction
+            'locationRestriction': location_restriction,
+            'includedType' : categories
         }
         if page_token:
             data['pageToken'] = page_token
@@ -270,6 +271,7 @@ def run_search():
     
     query_file = request.files['query']
     location_code = request.form['location']
+    category = request.form['category']
     search_type = request.form['search-type']
     use_deep_search = request.form.get('use-deep-search') == 'true'
 
@@ -280,7 +282,7 @@ def run_search():
     query_file.save(query_file_path)
 
     if search_type == 'specific-location':
-        threading.Thread(target=process_specific_location_queries, args=(query_file_path, location_code, results_file_path, use_deep_search)).start()
+        threading.Thread(target=process_specific_location_queries, args=(query_file_path, location_code, category, results_file_path, use_deep_search)).start()
     elif search_type == 'state-count':
         threading.Thread(target=process_state_count_queries, args=(query_file_path, results_file_path, use_deep_search)).start()
     else:
@@ -288,14 +290,14 @@ def run_search():
 
     return jsonify({'success': True, 'message': 'Search started', 'session_id': session_id})
 
-def process_specific_location_queries(query_file_path, location_code, results_file_path, use_deep_search=False):
+def process_specific_location_queries(query_file_path, location_code, categories, results_file_path, use_deep_search=False):
     try:
         with open(query_file_path, 'r', encoding='utf-8') as file:
             queries = file.readlines()
 
         results = []
         for query in queries:
-            places = search_places(query.strip(), location_code)
+            places = search_places(query.strip(), location_code, categories)
             for place in places:
                 place_info = {
                     'name': place['displayName']['text'],
