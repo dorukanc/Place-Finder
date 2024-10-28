@@ -335,9 +335,13 @@
                             <input type="radio" class="form-radio" name="search-type" value="specific-location" checked>
                             <span class="ml-2">List Locations</span>
                         </label>
-                        <label class="inline-flex items-center ml-6">
+                        <label class="inline-flex items-center">
                             <input type="radio" class="form-radio" name="search-type" value="state-count">
-                            <span class="ml-2">Count Locations by State</span>
+                            <span class="ml-2">Count Locations by US States(50)</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" class="form-radio" name="search-type" value="specific-count">
+                            <span class="ml-2">Count Locations by Specific Loc</span>
                         </label>
                     </div>
                     
@@ -384,8 +388,9 @@
             const deepSearchContainer = document.getElementById('deep-search-container');
 
             // Toggle deep search visibility based on search type
+            // Add specific count 
             function toggleDeepSearch() {
-                const isStateCount = document.querySelector('input[name="search-type"]:checked').value === 'state-count';
+                const isStateCount = document.querySelector('input[name="search-type"]:checked').value === 'state-count' || document.querySelector('input[name="search-type"]:checked').value === 'specific-count';
                 deepSearchContainer.classList.toggle('hidden', !isStateCount);
             }
 

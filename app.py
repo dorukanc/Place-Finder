@@ -94,7 +94,50 @@ def deep_search_places(query, location_code, divisions=3):
 
     return total_count
 
-# Added deep search function, counting locations per state
+
+# func for only counting locations on a spesific location
+def count_locations_spesific_location(query, location_code, use_deep_search= False):
+    if use_deep_search:
+        count = deep_search_places(query, location_code)
+    else:
+        count = count_places(query, location_code)
+    return count
+
+# Function for processing queries specific to a location
+def process_specific_location_count_queries(query_file_path, location_code, results_file_path, use_deep_search=False):
+    try:
+        with open(query_file_path, 'r', encoding='utf-8') as file:
+            queries = file.readlines()
+
+        results = []
+        for query in queries:
+            query = query.strip()
+            count = count_locations_spesific_location(query, location_code, use_deep_search)
+            results.append({
+                'place_name': query,
+                'location': location_code,
+                'count': count
+            })
+
+        save_specific_location_count_to_csv(results, results_file_path)
+    except Exception as e:
+        print(f"Error processing specific location count queries: {e}")
+    finally:
+        if os.path.exists(query_file_path):
+            os.remove(query_file_path)
+            print(f"Deleted query file: {query_file_path}")
+        
+        threading.Thread(target=delete_file_after_delay, args=(results_file_path,)).start()
+
+# Save to CSV function for specific location count
+def save_specific_location_count_to_csv(data, file_path):
+    with open(file_path, mode='w', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        writer.writerow(['Place Name', 'Location', 'Count'])
+        for row in data:
+            writer.writerow([row['place_name'], row['location'], row['count']])
+
+# Added deep search function, counting locations per state (count in 50 states)
 def count_locations_per_state(query, use_deep_search=False):
     state_counts = {state: 0 for state in LOCATION_BOUNDS.keys() if state.startswith('US-')}
     for state in state_counts.keys():
@@ -285,6 +328,8 @@ def run_search():
         threading.Thread(target=process_specific_location_queries, args=(query_file_path, location_code, category, results_file_path, use_deep_search)).start()
     elif search_type == 'state-count':
         threading.Thread(target=process_state_count_queries, args=(query_file_path, results_file_path, use_deep_search)).start()
+    elif search_type == 'specific-count':
+        threading.Thread(target=process_specific_location_count_queries, args=(query_file_path, location_code, results_file_path, use_deep_search)).start()
     else:
         return jsonify({'success': False, 'message': 'Invalid search type'}), 400
 
