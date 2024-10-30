@@ -1,7 +1,7 @@
 import json
 
 # Load country and state bounds from a JSON file
-with open('data/location_bounds.json', 'r') as f:
+with open('location_bounds.json', 'r') as f:
     LOCATION_BOUNDS = json.load(f)
 
 def get_location_bounds(location_code):
