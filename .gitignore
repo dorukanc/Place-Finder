@@ -1,5 +1,4 @@
-# Ignore config file with API key
-config.py
+# Ignore .env 
 __pycache__
 .DS_Store
 temp/
@@ -7,3 +6,5 @@ temp/
 venv/
 analysis/
 .env
+search_functions/.env
+
