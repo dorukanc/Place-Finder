@@ -3,6 +3,7 @@ import os
 import uuid
 import threading
 import json
+import csv
 
 # Import Search Functions
 
@@ -58,8 +59,27 @@ def run_search():
     else:
         return jsonify({'success': False, 'message': 'Invalid search type'}), 400
 
-    return jsonify({'success': True, 'message': 'Search started', 'session_id': session_id})
+    return jsonify({'success': True, 'message': 'Search started', 'session_id': session_id, 'plot' : search_type == 'specific-count'})
 
+# To plot data in the front-end passing the csv result as json
+@app.route('/get-results/<session_id>', methods = ['GET'])
+def get_results(session_id):
+    results_file_path = os.path.join(RESULTS_DIR, f"results_{session_id}.csv")
+    
+    # Check if the file exists
+    if not os.path.exists(results_file_path):
+        return jsonify({'success': False, 'message': 'Results not found'}), 404
+
+    # Read the CSV and convert to JSON format
+    data = []
+    with open(results_file_path, 'r', encoding='utf-8') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            # Ensure proper integer conversion for the 'Count' column
+            row['Count'] = int(row['Count'])
+            data.append(row)
+
+    return jsonify({'success': True, 'data': data})
 
 @app.route('/check-status/<session_id>', methods=['GET'])
 def check_status(session_id):
