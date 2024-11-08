@@ -5,6 +5,9 @@ import requests
 import json
 
 # Import API KEY from .env
+from dotenv import load_dotenv
+
+load_dotenv()
 
 API_URL = 'https://places.googleapis.com/v1/places:searchText'
 API_KEY = os.getenv('API_KEY')
